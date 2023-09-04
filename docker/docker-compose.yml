@@ -1,0 +1,35 @@
+services:
+  mysql_db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - ../resources/db:/docker-entrypoint-initdb.d
+    ports:
+      - 33060:3306
+
+  service_inventory:
+    depends_on:
+      - mysql_db
+    image: app-service-management-inventory-dev:latest
+    environment:
+      DATABASE_URL: 'mysql+pymysql://root:password@mysql_db:3306/storedb'
+    ports:
+      - 8080:8000
+
+  apigateway:
+    image: app-apigateway-inventory-dev:latest
+    environment:
+      INVENTORY_SERVICE_URL: 'http://service_inventory:8000'
+    ports:
+      - 9090:8000
+  
+  front:
+    image: app-front-inventory-dev:latest
+    environment:
+      REACT_APP_APIGATEWAY_URL: 'http://apigateway:8000'
+    ports:
+      - 3000:80
+
+      
