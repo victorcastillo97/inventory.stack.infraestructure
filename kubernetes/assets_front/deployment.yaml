@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-front-inventory
+  labels:
+    app: front-inventory
+    env: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front-inventory
+      env: dev
+  template:
+    metadata:
+      labels:
+        app: front-inventory
+        env: dev
+    spec:
+      containers:
+      - name: front-inventory
+        image: victorcastillo11/app-front-inventory-dev:1.0.1
+        ports:
+        - containerPort: 80
+        env:
+        - name: REACT_APP_APIGATEWAY_URL
+          value: "http://apigateway-inventory-clusterip"

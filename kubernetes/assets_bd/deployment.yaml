@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bd-inventory-dev-deploy
+  labels:
+    app: bd-inventory
+    env: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bd-inventory
+      env: dev
+  template:
+    metadata:
+      labels:
+        app: bd-inventory
+        env: dev
+    spec:
+      containers:
+      - name: bd-inventory-dev
+        image: mysql:8.1.0
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: "password"
+        ports:
+          - containerPort: 3306
+        volumeMounts:
+          - name: db-inventory-config
+            mountPath: "/docker-entrypoint-initdb.d/"
+          - name: db-inventory-volume
+            mountPath: "/var/lib/mysql/"
+      volumes:
+        - name: db-inventory-volume
+          persistentVolumeClaim:
+            claimName: db-inventory-pvc-dev
+        - name: db-inventory-config
+          configMap:
+            name: db-inventory-configmap-dev

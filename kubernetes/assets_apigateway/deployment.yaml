@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-apigateway-inventory
+  labels:
+    app: apigateway-inventory
+    env: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigateway-inventory
+      env: dev
+  template:
+    metadata:
+      labels:
+        app: apigateway-inventory
+        env: dev
+    spec:
+      containers:
+      - name: apigateway-inventory
+        image: victorcastillo11/app-apigateway-inventory-dev:1.0.0
+        ports:
+        - containerPort: 8000
+        env: 
+          - name: INVENTORY_SERVICE_URL
+            value: "http://service-management-inventory-clusterip"

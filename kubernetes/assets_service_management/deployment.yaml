@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-service-management-inventory
+  labels:
+    app: service-management-inventory
+    env: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-management-inventory
+      env: dev
+  template:
+    metadata:
+      labels:
+        app: service-management-inventory
+        env: dev
+    spec:
+      containers:
+      - name: service-management-inventory
+        image: victorcastillo11/app-service-management-inventory-dev:1.0.0
+        ports:
+        - containerPort: 8000
+        env:
+          - name: DATABASE_URL
+            value: "mysql+pymysql://root:password@database-inventory-dev:3306/storedb"
